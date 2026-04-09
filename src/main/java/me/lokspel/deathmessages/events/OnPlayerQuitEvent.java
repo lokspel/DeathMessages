@@ -44,7 +44,7 @@ public class OnPlayerQuitEvent implements Listener {
             TextColor parsedMainColor = mm.deserialize(config.getQuitMainColor() + "x").color();
 
             Component colored = parsedMainColor != null
-                    ? message.colorIfAbsent(parsedMainColor)
+                    ? message.color(parsedMainColor)
                     : message;
 
             Component playerComponent = MessageUtils.colorName(player.getName(), config.getQuitPlayerColor());
