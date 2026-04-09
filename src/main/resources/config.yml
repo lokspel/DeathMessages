@@ -1,0 +1,25 @@
+# DeathMessages - Configuration for message recoloring
+# Uses MiniMessage format: https://docs.advntr.dev/minimessage/
+
+colors:
+  death:
+    main: "<red>"
+    player: "<dark_aqua>"
+    killer: "<dark_red>"
+    weapon: "<gold>"
+
+  join:
+    main: "<gray>"
+    player: "<gray>"
+
+  quit:
+    main: "<gray>"
+    player: "<gray>"
+
+settings:
+  min-playtime-minutes: 0
+  death-message-cooldown-seconds: 10
+  death-messages-enabled: true
+  join-messages-enabled: true
+  quit-messages-enabled: true
+
