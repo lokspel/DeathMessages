@@ -3,9 +3,9 @@
 
 colors:
   death:
-    main: "<red>"
+    main: "<dark_red>"
     player: "<dark_aqua>"
-    killer: "<dark_red>"
+    killer: "<gold>"
     weapon: "<gold>"
 
   join:
