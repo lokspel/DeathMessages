@@ -7,6 +7,7 @@ import me.lokspel.deathmessages.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -75,7 +76,12 @@ public class OnPlayerDeathEvent implements Listener {
             String weaponColor,
             Player killer
     ) {
-        Component colored = message.colorIfAbsent(TextColor.fromHexString(mainColor));
+        MiniMessage mm = MiniMessage.miniMessage();
+        TextColor parsedMainColor = mm.deserialize(mainColor + "x").color();
+
+        Component colored = parsedMainColor != null
+                ? message.colorIfAbsent(parsedMainColor)
+                : message;
 
         if (playerName != null && !playerName.isEmpty()) {
             Component playerComponent = MessageUtils.colorName(playerName, playerColor);
