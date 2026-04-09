@@ -42,7 +42,7 @@ public class OnPlayerJoinEvent implements Listener {
             TextColor parsedMainColor = mm.deserialize(config.getJoinMainColor() + "x").color();
 
             Component colored = parsedMainColor != null
-                    ? message.colorIfAbsent(parsedMainColor)
+                    ? message.color(parsedMainColor)
                     : message;
 
             Component playerComponent = MessageUtils.colorName(player.getName(), config.getJoinPlayerColor());
