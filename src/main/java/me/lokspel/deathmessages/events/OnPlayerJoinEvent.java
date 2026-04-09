@@ -5,6 +5,8 @@ import me.lokspel.deathmessages.config.ConfigManager;
 import me.lokspel.deathmessages.utils.MessageUtils;
 import me.lokspel.deathmessages.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -36,12 +38,17 @@ public class OnPlayerJoinEvent implements Listener {
 
         Component message = event.joinMessage();
         if (message != null) {
-            Component colored = MessageUtils.colorMessageWithName(
-                    message,
-                    config.getJoinMainColor(),
-                    player.getName(),
-                    config.getJoinPlayerColor()
-            );
+            MiniMessage mm = MiniMessage.miniMessage();
+            TextColor parsedMainColor = mm.deserialize(config.getJoinMainColor() + "x").color();
+
+            Component colored = parsedMainColor != null
+                    ? message.colorIfAbsent(parsedMainColor)
+                    : message;
+
+            Component playerComponent = MessageUtils.colorName(player.getName(), config.getJoinPlayerColor());
+            colored = colored.replaceText(builder -> builder
+                    .matchLiteral(player.getName())
+                    .replacement(playerComponent));
 
             MessageUtils.broadcastMessage(colored);
         }
