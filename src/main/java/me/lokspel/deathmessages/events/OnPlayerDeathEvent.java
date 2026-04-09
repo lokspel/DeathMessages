@@ -6,6 +6,7 @@ import me.lokspel.deathmessages.utils.MessageUtils;
 import me.lokspel.deathmessages.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,7 +44,7 @@ public class OnPlayerDeathEvent implements Listener {
 
         if (deathMessage != null && !PlayerUtils.isCooldownActive(player, cooldownSeconds)) {
             String playerName = player.getName();
-            String killerName = (killer != null) ? killer.getName() : "Unknown";
+            String killerName = (killer != null) ? killer.getName() : null;
 
             Component colored = colorDeathMessage(
                     deathMessage,
@@ -74,17 +75,19 @@ public class OnPlayerDeathEvent implements Listener {
             String weaponColor,
             Player killer
     ) {
-        String messageText = MessageUtils.getPlainText(message);
-        Component colored = MessageUtils.colorMessageWithName(
-                Component.text(messageText),
-                mainColor,
-                playerName,
-                playerColor
-        );
+        Component colored = message.colorIfAbsent(TextColor.fromHexString(mainColor));
 
-        if (killerName != null && !killerName.isEmpty() && !killerName.equals("Unknown")) {
+        if (playerName != null && !playerName.isEmpty()) {
+            Component playerComponent = MessageUtils.colorName(playerName, playerColor);
+            colored = colored.replaceText(builder -> builder
+                    .matchLiteral(playerName)
+                    .replacement(playerComponent));
+        }
+
+        if (killerName != null && !killerName.isEmpty()) {
             Component killerComponent = MessageUtils.colorName(killerName, killerColor);
-            colored = colored.replaceText(builder -> builder.matchLiteral(killerName)
+            colored = colored.replaceText(builder -> builder
+                    .matchLiteral(killerName)
                     .replacement(killerComponent));
         }
 
@@ -94,7 +97,8 @@ public class OnPlayerDeathEvent implements Listener {
                 String weaponName = getWeaponName(weapon);
                 if (weaponName != null) {
                     Component weaponComponent = MessageUtils.colorName(weaponName, weaponColor);
-                    colored = colored.replaceText(builder -> builder.matchLiteral(weaponName)
+                    colored = colored.replaceText(builder -> builder
+                            .matchLiteral(weaponName)
                             .replacement(weaponComponent));
                 }
             }
@@ -111,6 +115,13 @@ public class OnPlayerDeathEvent implements Listener {
                 return ((TextComponent) displayName).content();
             }
         }
-        return weapon.getType().name();
+        String[] words = weapon.getType().name().toLowerCase().split("_");
+        StringBuilder sb = new StringBuilder();
+        for (String word : words) {
+            sb.append(Character.toUpperCase(word.charAt(0)))
+              .append(word.substring(1))
+              .append(" ");
+        }
+        return sb.toString().trim();
     }
 }
