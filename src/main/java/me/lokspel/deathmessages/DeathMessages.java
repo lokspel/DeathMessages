@@ -41,6 +41,9 @@ public class DeathMessages extends JavaPlugin {
         getCommand("deathmessages").setTabCompleter(dispatcher);
         getCommand("toggleconnectionmsg").setExecutor(new ToggleConnectionMsgCommand(this));
 
+        CommandToggle dmtoggle = new CommandToggle(this);
+        getCommand("deathmessagestoggle").setExecutor((sender, cmd, label, args) -> dmtoggle.execute(sender, args));
+
         getServer().getPluginManager().registerEvents(new OnPlayerDeathEvent(), this);
         getServer().getPluginManager().registerEvents(new OnPlayerJoinEvent(), this);
         getServer().getPluginManager().registerEvents(new OnPlayerQuitEvent(), this);

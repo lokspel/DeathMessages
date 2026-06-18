@@ -15,6 +15,11 @@ commands:
     description: Toggle join/quit messages on or off.
     usage: /<command>
     permission: deathmessages.use
+  deathmessagestoggle:
+    aliases: [dmtoggle, dmt]
+    description: Shortcut to toggle death messages.
+    usage: /<command>
+    permission: deathmessages.use
 
 permissions:
   deathmessages.use:

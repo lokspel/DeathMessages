@@ -30,7 +30,7 @@ Settings:
 
 Commands:
   DeathMessages:
-    Prefix: '&7[DeathMessages]&r'
+    Prefix: '&7[DeathMessages]&r '
     Player-Only-Command: '&cOnly players can run this command.'
     No-Permission: '%prefix%&cYou do not have permission for this command.'
     Help:

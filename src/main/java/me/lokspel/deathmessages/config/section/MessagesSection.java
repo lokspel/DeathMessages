@@ -15,7 +15,7 @@ public class MessagesSection {
     }
 
     public String getPrefix() {
-        return config.getString(path + ".Prefix", "&7[DeathMessages]&r");
+        return config.getString(path + ".Prefix", "&7[DeathMessages]&r ");
     }
 
     public String getPlayerOnly() {
