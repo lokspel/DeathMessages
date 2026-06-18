@@ -26,9 +26,9 @@ A Paper plugin that recolorizes death, join, and quit messages with per-player t
 
 | Node | Default | Description |
 |------|---------|-------------|
-| `deathmessages.command.toggle` | `true` | Allows toggling death messages |
-| `deathmessages.command.toggleconnectionmsg` | `true` | Allows toggling join/quit messages |
-| `deathmessages.command.blacklist` | `true` | Allows blacklisting a player |
+| `deathmessages.command.toggle` | `op` | Allows toggling death messages |
+| `deathmessages.command.toggleconnectionmsg` | `op` | Allows toggling join/quit messages |
+| `deathmessages.command.blacklist` | `op` | Allows blacklisting a player |
 | `deathmessages.command.reload` | `op` | Allows reloading the plugin |
 
 ## Configuration
