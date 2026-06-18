@@ -29,6 +29,11 @@ public class CommandBlacklist implements SubCommand, TabCompleter {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(legacySerializer.deserialize(config.getMessages().getPlayerOnly()));
+            return true;
+        }
+
         if (!sender.hasPermission("deathmessages.blacklist")) {
             sender.sendMessage(legacySerializer.deserialize(
                     config.getMessages().getNoPermission().replace("%prefix%", config.getMessages().getPrefix())));
@@ -40,6 +45,7 @@ public class CommandBlacklist implements SubCommand, TabCompleter {
             return true;
         }
 
+        Player viewer = (Player) sender;
         String username = args[1];
         UUID targetUUID = null;
 
@@ -67,15 +73,14 @@ public class CommandBlacklist implements SubCommand, TabCompleter {
             return true;
         }
 
-        boolean currentlyBlacklisted = userData.isBlacklisted(targetUUID);
-        userData.setBlacklisted(targetUUID, username, !currentlyBlacklisted);
+        boolean nowBlacklisted = userData.toggleBlacklist(viewer.getUniqueId(), targetUUID, username);
 
-        if (currentlyBlacklisted) {
-            sender.sendMessage(legacySerializer.deserialize(
-                    config.getMessages().getBlacklistRemove().replace("%player%", username)));
-        } else {
+        if (nowBlacklisted) {
             sender.sendMessage(legacySerializer.deserialize(
                     config.getMessages().getBlacklistAdd().replace("%player%", username)));
+        } else {
+            sender.sendMessage(legacySerializer.deserialize(
+                    config.getMessages().getBlacklistRemove().replace("%player%", username)));
         }
         return true;
     }

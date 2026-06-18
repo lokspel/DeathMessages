@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 public class UserDataManager {
@@ -60,14 +61,29 @@ public class UserDataManager {
         saveUserData();
     }
 
-    public boolean isBlacklisted(UUID uuid) {
-        return userData.getBoolean(uuid + ".is-blacklisted", false);
+    public List<String> getBlacklist(UUID viewerUUID) {
+        return userData.getStringList(viewerUUID + ".blacklist");
     }
 
-    public void setBlacklisted(UUID uuid, String username, boolean blacklisted) {
-        userData.set(uuid + ".is-blacklisted", blacklisted);
-        userData.set(uuid + ".username", username);
+    public boolean isBlacklistedFor(UUID viewerUUID, UUID targetUUID) {
+        return getBlacklist(viewerUUID).contains(targetUUID.toString());
+    }
+
+    public boolean toggleBlacklist(UUID viewerUUID, UUID targetUUID, String targetUsername) {
+        List<String> blacklist = getBlacklist(viewerUUID);
+        String targetStr = targetUUID.toString();
+        boolean currentlyBlacklisted = blacklist.contains(targetStr);
+
+        if (currentlyBlacklisted) {
+            blacklist.remove(targetStr);
+        } else {
+            blacklist.add(targetStr);
+        }
+
+        userData.set(viewerUUID + ".blacklist", blacklist);
+        userData.set(targetUUID + ".username", targetUsername);
         saveUserData();
+        return !currentlyBlacklisted;
     }
 
     public UUID getUUIDByUsername(String username) {

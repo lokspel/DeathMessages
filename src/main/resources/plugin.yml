@@ -29,8 +29,8 @@ permissions:
     description: Allows toggling death messages.
     default: true
   deathmessages.blacklist:
-    description: Allows blacklisting a player from death messages.
-    default: op
+    description: Allows blacklisting a player.
+    default: true
   deathmessages.reload:
     description: Allows reloading the plugin configuration.
     default: op

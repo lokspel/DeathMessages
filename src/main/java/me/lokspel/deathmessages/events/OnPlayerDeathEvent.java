@@ -64,10 +64,11 @@ public class OnPlayerDeathEvent implements Listener {
                 killer
         );
 
-        boolean blacklisted = userData.isBlacklisted(player.getUniqueId());
-
         for (Player online : player.getServer().getOnlinePlayers()) {
-            if (online.equals(player) || (!blacklisted && userData.isMessagesEnabled(online.getUniqueId()))) {
+            if (online.equals(player)) {
+                online.sendMessage(colored);
+            } else if (!userData.isBlacklistedFor(online.getUniqueId(), player.getUniqueId())
+                    && userData.isMessagesEnabled(online.getUniqueId())) {
                 online.sendMessage(colored);
             }
         }

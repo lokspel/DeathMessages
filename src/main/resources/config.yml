@@ -35,8 +35,8 @@ Commands:
     No-Permission: '%prefix%&cYou do not have permission for this command.'
     Help:
     - '&3-----------------------------------------------------'
-    - '&7/deathmessages blacklist <username> &8- &7Blacklists the user from death
-      messages. They will still see other players'' death messages, but not send them.'
+    - '&7/deathmessages blacklist <username> &8- &7Blacklists a player so you no longer
+      see their death messages.'
     - '&7/deathmessages toggle &8- &7Toggle death messages on or off.'
     - '&3-----------------------------------------------------'
     Sub-Commands:
