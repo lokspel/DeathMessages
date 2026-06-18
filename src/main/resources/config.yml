@@ -37,7 +37,7 @@ Commands:
     - '&3-----------------------------------------------------'
     - '&7/deathmessages blacklist <username> &8- &7Blacklists a player so you no longer
       see their death messages.'
-    - '&7/deathmessages toggle &8- &7Toggle death messages on or off.'
+    - '&7/deathmessages toggle &8- &7Toggle whether you see others'' death messages.'
     - '&3-----------------------------------------------------'
     Sub-Commands:
       Reload:

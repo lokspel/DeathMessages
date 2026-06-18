@@ -9,22 +9,16 @@ commands:
     aliases: [dm]
     description: Main DeathMessages command.
     usage: /<command> <reload|toggle|blacklist>
-    permission: deathmessages.use
   toggleconnectionmsg:
     aliases: [togglejoins]
     description: Toggle join/quit messages on or off.
     usage: /<command>
-    permission: deathmessages.use
   deathmessagestoggle:
     aliases: [dmtoggle, dmt]
     description: Shortcut to toggle death messages.
     usage: /<command>
-    permission: deathmessages.use
 
 permissions:
-  deathmessages.use:
-    description: Allows using DeathMessages commands.
-    default: true
   deathmessages.toggle:
     description: Allows toggling death messages.
     default: true

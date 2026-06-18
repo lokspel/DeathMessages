@@ -5,7 +5,7 @@ A Paper plugin that recolorizes death, join, and quit messages with per-player t
 ## Features
 
 - **Custom colors** — Set separate MiniMessage colors for death messages (main text, player, killer, weapon), join messages, and quit messages.
-- **Per-player toggle** — Each player can hide/show death messages from others or hide/show join/quit messages. Toggle controls what *you* see, not what others see of you.
+- **Per-player toggle** — Each player can hide/show all death messages (including their own) or hide/show join/quit messages. Toggle controls what *you* see, not what others see of you.
 - **Blacklist** — Blacklist a player so you no longer see their death messages. Others still see them, and the blacklisted player still sees their own death.
 - **Global toggles** — Disable death, join, or quit messages globally via config.
 - **Cooldown** — Per-player cooldown between death messages (configurable, default 10s).
@@ -17,8 +17,8 @@ A Paper plugin that recolorizes death, join, and quit messages with per-player t
 | Command | Aliases | Permission | Description |
 |---------|---------|------------|-------------|
 | `/deathmessages reload` | `/dm reload` | `deathmessages.reload` | Reload config and user data |
-| `/deathmessages toggle` | `/dm toggle` | `deathmessages.toggle` | Toggle death messages on/off for yourself |
-| `/deathmessages blacklist <player>` | `/dm blacklist <player>` | `deathmessages.blacklist` | Add/remove a player from the blacklist |
+| `/deathmessages toggle` | `/dm toggle` | `deathmessages.toggle` | Toggle death messages on/off (including your own) |
+| `/deathmessages blacklist <player>` | `/dm blacklist <player>` | `deathmessages.blacklist` | Add/remove a player from your personal blacklist |
 | `/toggleconnectionmsg` | `/togglejoins` | `deathmessages.toggleconnectionmsg` | Toggle join/quit messages on/off for yourself |
 | `/deathmessagestoggle` | `/dmtoggle`, `/dmt` | `deathmessages.toggle` | Shortcut for toggling death messages |
 
@@ -26,7 +26,6 @@ A Paper plugin that recolorizes death, join, and quit messages with per-player t
 
 | Node | Default | Description |
 |------|---------|-------------|
-| `deathmessages.use` | `true` | Allows using DeathMessages commands |
 | `deathmessages.toggle` | `true` | Allows toggling death messages |
 | `deathmessages.toggleconnectionmsg` | `true` | Allows toggling join/quit messages |
 | `deathmessages.blacklist` | `true` | Allows blacklisting a player |
