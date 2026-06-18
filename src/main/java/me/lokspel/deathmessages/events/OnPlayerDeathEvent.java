@@ -2,6 +2,7 @@ package me.lokspel.deathmessages.events;
 
 import me.lokspel.deathmessages.DeathMessages;
 import me.lokspel.deathmessages.config.ConfigManager;
+import me.lokspel.deathmessages.config.UserDataManager;
 import me.lokspel.deathmessages.utils.MessageUtils;
 import me.lokspel.deathmessages.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
@@ -20,50 +21,59 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class OnPlayerDeathEvent implements Listener {
 
     private final ConfigManager config;
+    private final UserDataManager userData;
 
     public OnPlayerDeathEvent() {
         this.config = DeathMessages.getInstance().getConfigManager();
+        this.userData = DeathMessages.getInstance().getUserDataManager();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void handle(PlayerDeathEvent event) {
-        if (!config.isDeathMessagesEnabled()) {
+        if (!config.getSettings().isDeathMessagesEnabled()) {
             return;
         }
 
-        Component deathMessage = event.deathMessage();
         Player player = event.getEntity();
         long playTime = PlayerUtils.getPlayTime(player);
-        int minPlayTimeMinutes = config.getMinPlayTimeMinutes();
 
-        if (playTime < minPlayTimeMinutes) {
+        if (playTime < config.getSettings().getMinPlayTimeMinutes()) {
             return;
         }
 
         Player killer = player.getKiller();
-        int cooldownSeconds = config.getDeathMessageCooldownSeconds();
+        int cooldownSeconds = config.getSettings().getDeathMessageCooldownSeconds();
+        Component deathMessage = event.deathMessage();
 
-        if (deathMessage != null && !PlayerUtils.isCooldownActive(player, cooldownSeconds)) {
-            String playerName = player.getName();
-            String killerName = (killer != null) ? killer.getName() : null;
-
-            Component colored = colorDeathMessage(
-                    deathMessage,
-                    config.getDeathMainColor(),
-                    playerName,
-                    config.getDeathPlayerColor(),
-                    killerName,
-                    config.getDeathKillerColor(),
-                    config.getDeathWeaponColor(),
-                    killer
-            );
-
-            MessageUtils.broadcastMessage(colored);
+        if (deathMessage == null || PlayerUtils.isCooldownActive(player, cooldownSeconds)) {
             event.deathMessage(null);
-            PlayerUtils.addDeathTime(player, PlayerUtils.getCurrentTimeSeconds());
-        } else {
-            event.deathMessage(null);
+            return;
         }
+
+        String playerName = player.getName();
+        String killerName = (killer != null) ? killer.getName() : null;
+
+        Component colored = colorDeathMessage(
+                deathMessage,
+                config.getColors().getDeathMain(),
+                playerName,
+                config.getColors().getDeathPlayer(),
+                killerName,
+                config.getColors().getDeathKiller(),
+                config.getColors().getDeathWeapon(),
+                killer
+        );
+
+        boolean blacklisted = userData.isBlacklisted(player.getUniqueId());
+
+        for (Player online : player.getServer().getOnlinePlayers()) {
+            if (online.equals(player) || (!blacklisted && userData.isMessagesEnabled(online.getUniqueId()))) {
+                online.sendMessage(colored);
+            }
+        }
+
+        event.deathMessage(null);
+        PlayerUtils.addDeathTime(player, PlayerUtils.getCurrentTimeSeconds());
     }
 
     private Component colorDeathMessage(

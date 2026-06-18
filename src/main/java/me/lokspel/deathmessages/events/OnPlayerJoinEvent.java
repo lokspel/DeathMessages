@@ -2,6 +2,7 @@ package me.lokspel.deathmessages.events;
 
 import me.lokspel.deathmessages.DeathMessages;
 import me.lokspel.deathmessages.config.ConfigManager;
+import me.lokspel.deathmessages.config.UserDataManager;
 import me.lokspel.deathmessages.utils.MessageUtils;
 import me.lokspel.deathmessages.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
@@ -16,20 +17,22 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class OnPlayerJoinEvent implements Listener {
 
     private final ConfigManager config;
+    private final UserDataManager userData;
 
     public OnPlayerJoinEvent() {
         this.config = DeathMessages.getInstance().getConfigManager();
+        this.userData = DeathMessages.getInstance().getUserDataManager();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void handle(PlayerJoinEvent event) {
-        if (!config.isJoinMessagesEnabled()) {
+        if (!config.getSettings().isJoinMessagesEnabled()) {
             return;
         }
 
         Player player = event.getPlayer();
         long playTime = PlayerUtils.getPlayTime(player);
-        int minPlayTimeMinutes = config.getMinPlayTimeMinutes();
+        int minPlayTimeMinutes = config.getSettings().getMinPlayTimeMinutes();
 
         if (playTime < minPlayTimeMinutes) {
             event.joinMessage(null);
@@ -39,18 +42,22 @@ public class OnPlayerJoinEvent implements Listener {
         Component message = event.joinMessage();
         if (message != null) {
             MiniMessage mm = MiniMessage.miniMessage();
-            TextColor parsedMainColor = mm.deserialize(config.getJoinMainColor() + "x").color();
+            TextColor parsedMainColor = mm.deserialize(config.getColors().getJoinMain() + "x").color();
 
             Component colored = parsedMainColor != null
                     ? message.color(parsedMainColor)
                     : message;
 
-            Component playerComponent = MessageUtils.colorName(player.getName(), config.getJoinPlayerColor());
+            Component playerComponent = MessageUtils.colorName(player.getName(), config.getColors().getJoinPlayer());
             colored = colored.replaceText(builder -> builder
                     .matchLiteral(player.getName())
                     .replacement(playerComponent));
 
-            MessageUtils.broadcastMessage(colored);
+            for (Player online : player.getServer().getOnlinePlayers()) {
+                if (userData.isConnectionMessagesEnabled(online.getUniqueId())) {
+                    online.sendMessage(colored);
+                }
+            }
         }
 
         event.joinMessage(null);

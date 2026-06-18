@@ -1,5 +1,34 @@
 name: DeathMessages
 version: '${project.version}'
 main: me.lokspel.deathmessages.DeathMessages
-api-version: '1.21'
+api-version: '26.1.2'
 folia-supported: true
+
+commands:
+  deathmessages:
+    aliases: [dm]
+    description: Main DeathMessages command.
+    usage: /<command> <reload|toggle|blacklist>
+    permission: deathmessages.use
+  toggleconnectionmsg:
+    aliases: [togglejoins]
+    description: Toggle join/quit messages on or off.
+    usage: /<command>
+    permission: deathmessages.use
+
+permissions:
+  deathmessages.use:
+    description: Allows using DeathMessages commands.
+    default: true
+  deathmessages.toggle:
+    description: Allows toggling death messages.
+    default: true
+  deathmessages.blacklist:
+    description: Allows blacklisting a player from death messages.
+    default: op
+  deathmessages.reload:
+    description: Allows reloading the plugin configuration.
+    default: op
+  deathmessages.toggleconnectionmsg:
+    description: Allows toggling join/quit messages.
+    default: true

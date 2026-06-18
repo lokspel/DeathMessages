@@ -1,5 +1,8 @@
 package me.lokspel.deathmessages.config;
 
+import me.lokspel.deathmessages.config.section.ColorsSection;
+import me.lokspel.deathmessages.config.section.MessagesSection;
+import me.lokspel.deathmessages.config.section.SettingsSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,13 +15,19 @@ public class ConfigManager {
     private FileConfiguration config;
     private File configFile;
 
+    private ColorsSection colors;
+    private SettingsSection settings;
+    private MessagesSection messages;
+
     public ConfigManager(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
     public void loadConfig() {
         if (!plugin.getDataFolder().exists()) {
-            plugin.getDataFolder().mkdirs();
+            if (!plugin.getDataFolder().mkdirs()) {
+                plugin.getLogger().warning("Failed to create plugin data folder.");
+            }
         }
 
         configFile = new File(plugin.getDataFolder(), "config.yml");
@@ -28,71 +37,29 @@ public class ConfigManager {
         }
 
         config = YamlConfiguration.loadConfiguration(configFile);
+        colors = new ColorsSection(config, "Colors");
+        settings = new SettingsSection(config, "Settings");
+        messages = new MessagesSection(config, "Commands.DeathMessages");
     }
 
     public void reloadConfig() {
         if (configFile != null && configFile.exists()) {
             config = YamlConfiguration.loadConfiguration(configFile);
+            colors = new ColorsSection(config, "Colors");
+            settings = new SettingsSection(config, "Settings");
+            messages = new MessagesSection(config, "Commands.DeathMessages");
         }
     }
 
-    public FileConfiguration getConfig() {
-        return config;
+    public ColorsSection getColors() {
+        return colors;
     }
 
-    // Death message colors
-    public String getDeathMainColor() {
-        return config.getString("colors.death.main", "<red>");
+    public SettingsSection getSettings() {
+        return settings;
     }
 
-    public String getDeathPlayerColor() {
-        return config.getString("colors.death.player", "<green>");
-    }
-
-    public String getDeathKillerColor() {
-        return config.getString("colors.death.killer", "<red>");
-    }
-
-    public String getDeathWeaponColor() {
-        return config.getString("colors.death.weapon", "<yellow>");
-    }
-
-    // Join message colors
-    public String getJoinMainColor() {
-        return config.getString("colors.join.main", "<dark_green>");
-    }
-
-    public String getJoinPlayerColor() {
-        return config.getString("colors.join.player", "<green>");
-    }
-
-    // Quit message colors
-    public String getQuitMainColor() {
-        return config.getString("colors.quit.main", "<dark_red>");
-    }
-
-    public String getQuitPlayerColor() {
-        return config.getString("colors.quit.player", "<light_purple>");
-    }
-
-    // Settings
-    public int getMinPlayTimeMinutes() {
-        return config.getInt("settings.min-playtime-minutes", 0);
-    }
-
-    public int getDeathMessageCooldownSeconds() {
-        return config.getInt("settings.death-message-cooldown-seconds", 3);
-    }
-
-    public boolean isDeathMessagesEnabled() {
-        return config.getBoolean("settings.death-messages-enabled", true);
-    }
-
-    public boolean isJoinMessagesEnabled() {
-        return config.getBoolean("settings.join-messages-enabled", true);
-    }
-
-    public boolean isQuitMessagesEnabled() {
-        return config.getBoolean("settings.quit-messages-enabled", true);
+    public MessagesSection getMessages() {
+        return messages;
     }
 }

@@ -1,25 +1,54 @@
 # DeathMessages - Configuration for message recoloring
 # Uses MiniMessage format: https://docs.advntr.dev/minimessage/
 
-colors:
-  death:
-    main: "<dark_red>"
-    player: "<dark_aqua>"
-    killer: "<dark_aqua>"
-    weapon: "<gold>"
+Colors:
+  Death:
+    Main: "<dark_red>"
+    Player: "<dark_aqua>"
+    Killer: "<dark_aqua>"
+    Weapon: "<gold>"
 
-  join:
-    main: "<gray>"
-    player: "<gray>"
+  Join:
+    Main: "<gray>"
+    Player: "<gray>"
 
-  quit:
-    main: "<gray>"
-    player: "<gray>"
+  Quit:
+    Main: "<gray>"
+    Player: "<gray>"
 
-settings:
-  min-playtime-minutes: 0
-  death-message-cooldown-seconds: 10
-  death-messages-enabled: true
-  join-messages-enabled: true
-  quit-messages-enabled: true
+Settings:
+  # Minimum playtime in minutes before a player's death/join/quit messages are shown (0 = no minimum)
+  Min-Playtime-Minutes: 0
+  # Cooldown in seconds between a player's death messages being broadcast
+  Death-Message-Cooldown-Seconds: 10
+  # Enable or disable death messages globally
+  Death-Messages-Enabled: true
+  # Enable or disable join messages globally
+  Join-Messages-Enabled: true
+  # Enable or disable quit messages globally
+  Quit-Messages-Enabled: true
+
+Commands:
+  DeathMessages:
+    Prefix: '&7[DeathMessages]&r'
+    Player-Only-Command: '&cOnly players can run this command.'
+    No-Permission: '%prefix%&cYou do not have permission for this command.'
+    Help:
+    - '&3-----------------------------------------------------'
+    - '&7/deathmessages blacklist <username> &8- &7Blacklists the user from death
+      messages. They will still see other players'' death messages, but not send them.'
+    - '&7/deathmessages toggle &8- &7Toggle death messages on or off.'
+    - '&3-----------------------------------------------------'
+    Sub-Commands:
+      Reload:
+        Reloaded: '%prefix%&aReloaded all plugin configs.'
+      Toggle:
+        Toggle-On: '&6Death messages unhidden.'
+        Toggle-Off: '&6Death messages hidden.'
+      Blacklist:
+        Help: '&cUsage: /dm blacklist <username>'
+        Username-None-Existent: '%prefix%&cCould not find the player with the username
+          &e%player%'
+        Blacklist-Add: '&6Now blacklisting &3%player%'
+        Blacklist-Remove: '&6No longer blacklisting &3%player%'
 
