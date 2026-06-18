@@ -19,7 +19,7 @@ public class CommandReload implements SubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("deathmessages.reload")) {
+        if (!sender.hasPermission("deathmessages.command.reload")) {
             sender.sendMessage(legacySerializer.deserialize(
                     config.getMessages().getNoPermission().replace("%prefix%", config.getMessages().getPrefix())));
             return true;

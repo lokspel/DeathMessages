@@ -34,7 +34,7 @@ public class CommandBlacklist implements SubCommand, TabCompleter {
             return true;
         }
 
-        if (!sender.hasPermission("deathmessages.blacklist")) {
+        if (!sender.hasPermission("deathmessages.command.blacklist")) {
             sender.sendMessage(legacySerializer.deserialize(
                     config.getMessages().getNoPermission().replace("%prefix%", config.getMessages().getPrefix())));
             return true;

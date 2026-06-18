@@ -20,7 +20,7 @@ public class CommandToggle implements SubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("deathmessages.toggle")) {
+        if (!sender.hasPermission("deathmessages.command.toggle")) {
             sender.sendMessage(legacySerializer.deserialize(
                     config.getMessages().getNoPermission().replace("%prefix%", config.getMessages().getPrefix())));
             return true;

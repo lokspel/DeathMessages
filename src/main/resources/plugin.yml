@@ -19,15 +19,15 @@ commands:
     usage: /<command>
 
 permissions:
-  deathmessages.toggle:
+  deathmessages.command.toggle:
     description: Allows toggling death messages.
     default: op
-  deathmessages.blacklist:
+  deathmessages.command.blacklist:
     description: Allows blacklisting a player.
     default: op
-  deathmessages.reload:
+  deathmessages.command.reload:
     description: Allows reloading the plugin configuration.
     default: op
-  deathmessages.toggleconnectionmsg:
+  deathmessages.command.toggleconnectionmsg:
     description: Allows toggling join/quit messages.
     default: true
