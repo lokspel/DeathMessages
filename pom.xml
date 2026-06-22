@@ -6,7 +6,7 @@
 
     <groupId>me.lokspel</groupId>
     <artifactId>deathmessages</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>DeathMessages</name>
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>[26.1.2.build,)</version>
+            <version>26.1.2.build.72-stable</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

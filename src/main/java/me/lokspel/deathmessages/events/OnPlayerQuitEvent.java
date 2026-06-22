@@ -8,6 +8,7 @@ import me.lokspel.deathmessages.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -43,12 +44,13 @@ public class OnPlayerQuitEvent implements Listener {
 
         Component message = event.quitMessage();
         if (message != null) {
+            String plainText = MessageUtils.getPlainText(message);
             MiniMessage mm = MiniMessage.miniMessage();
             TextColor parsedMainColor = mm.deserialize(config.getColors().getQuitMain() + "x").color();
 
             Component colored = parsedMainColor != null
-                    ? message.color(parsedMainColor)
-                    : message;
+                    ? Component.text(plainText).color(parsedMainColor)
+                    : Component.text(plainText);
 
             Component playerComponent = MessageUtils.colorName(player.getName(), config.getColors().getQuitPlayer());
             colored = colored.replaceText(builder -> builder
@@ -60,6 +62,8 @@ public class OnPlayerQuitEvent implements Listener {
                     online.sendMessage(colored);
                 }
             }
+
+            Bukkit.getConsoleSender().sendMessage(colored);
         }
 
         event.quitMessage(null);

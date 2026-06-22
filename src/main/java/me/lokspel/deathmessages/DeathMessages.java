@@ -14,6 +14,7 @@ import me.lokspel.deathmessages.events.OnPlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.Objects;
 
 public class DeathMessages extends JavaPlugin {
 
@@ -24,7 +25,7 @@ public class DeathMessages extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        getLogger().info("§b[DeathMessages] Plugin is loading...");
+        getLogger().info("Plugin is loading...");
 
         configManager = new ConfigManager(this);
         configManager.loadConfig();
@@ -37,12 +38,12 @@ public class DeathMessages extends JavaPlugin {
                 new RegisteredCommand("toggle", new CommandToggle(this)),
                 new RegisteredCommand("blacklist", new CommandBlacklist(this))
         ));
-        getCommand("deathmessages").setExecutor(dispatcher);
-        getCommand("deathmessages").setTabCompleter(dispatcher);
-        getCommand("toggleconnectionmsg").setExecutor(new ToggleConnectionMsgCommand(this));
+        Objects.requireNonNull(getCommand("deathmessages")).setExecutor(dispatcher);
+        Objects.requireNonNull(getCommand("deathmessages")).setTabCompleter(dispatcher);
+        Objects.requireNonNull(getCommand("toggleconnectionmsg")).setExecutor(new ToggleConnectionMsgCommand(this));
 
         CommandToggle dmtoggle = new CommandToggle(this);
-        getCommand("deathmessagestoggle").setExecutor((sender, cmd, label, args) -> dmtoggle.execute(sender, args));
+        Objects.requireNonNull(getCommand("deathmessagestoggle")).setExecutor((sender, cmd, label, args) -> dmtoggle.execute(sender, args));
 
         getServer().getPluginManager().registerEvents(new OnPlayerDeathEvent(), this);
         getServer().getPluginManager().registerEvents(new OnPlayerJoinEvent(), this);

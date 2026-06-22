@@ -9,6 +9,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -71,6 +72,7 @@ public class OnPlayerDeathEvent implements Listener {
             }
         }
 
+        Bukkit.getConsoleSender().sendMessage(colored);
         event.deathMessage(null);
         PlayerUtils.addDeathTime(player, PlayerUtils.getCurrentTimeSeconds());
     }
@@ -85,12 +87,13 @@ public class OnPlayerDeathEvent implements Listener {
             String weaponColor,
             Player killer
     ) {
+        String plainText = MessageUtils.getPlainText(message);
         MiniMessage mm = MiniMessage.miniMessage();
         TextColor parsedMainColor = mm.deserialize(mainColor + "x").color();
 
         Component colored = parsedMainColor != null
-                ? message.colorIfAbsent(parsedMainColor)
-                : message;
+                ? Component.text(plainText).color(parsedMainColor)
+                : Component.text(plainText);
 
         if (playerName != null && !playerName.isEmpty()) {
             Component playerComponent = MessageUtils.colorName(playerName, playerColor);
