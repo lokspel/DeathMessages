@@ -83,5 +83,5 @@ The output jar is `target/DeathMessages-1.0.jar`.
 
 ## Requirements
 
-- Paper 1.26.1+ (api-version `26.1.2`)
+- Paper 1.21.11+ (api-version 26.1.2)
 - Java 21
