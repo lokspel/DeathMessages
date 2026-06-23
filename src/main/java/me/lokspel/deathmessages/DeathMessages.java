@@ -33,17 +33,20 @@ public class DeathMessages extends JavaPlugin {
         userDataManager = new UserDataManager(this);
         userDataManager.loadUserData();
 
+        var toggleCommand = new CommandToggle(this);
+
         CommandDispatcher dispatcher = new CommandDispatcher(configManager, List.of(
                 new RegisteredCommand("reload", new CommandReload(this)),
-                new RegisteredCommand("toggle", new CommandToggle(this)),
+                new RegisteredCommand("toggle", toggleCommand),
                 new RegisteredCommand("blacklist", new CommandBlacklist(this))
         ));
-        Objects.requireNonNull(getCommand("deathmessages")).setExecutor(dispatcher);
-        Objects.requireNonNull(getCommand("deathmessages")).setTabCompleter(dispatcher);
+        var deathMessagesCmd = Objects.requireNonNull(getCommand("deathmessages"));
+        deathMessagesCmd.setExecutor(dispatcher);
+        deathMessagesCmd.setTabCompleter(dispatcher);
+
         Objects.requireNonNull(getCommand("toggleconnectionmsg")).setExecutor(new ToggleConnectionMsgCommand(this));
 
-        CommandToggle dmtoggle = new CommandToggle(this);
-        Objects.requireNonNull(getCommand("deathmessagestoggle")).setExecutor((sender, cmd, label, args) -> dmtoggle.execute(sender, args));
+        Objects.requireNonNull(getCommand("deathmessagestoggle")).setExecutor((sender, cmd, label, args) -> toggleCommand.execute(sender, args));
 
         getServer().getPluginManager().registerEvents(new OnPlayerDeathEvent(), this);
         getServer().getPluginManager().registerEvents(new OnPlayerJoinEvent(), this);

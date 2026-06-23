@@ -1,5 +1,7 @@
 package me.lokspel.deathmessages.config.section;
 
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class ColorsSection {
@@ -7,40 +9,66 @@ public class ColorsSection {
     private final FileConfiguration config;
     private final String path;
 
+    private TextColor deathMain;
+    private TextColor deathPlayer;
+    private TextColor deathKiller;
+    private TextColor deathWeapon;
+    private TextColor joinMain;
+    private TextColor joinPlayer;
+    private TextColor quitMain;
+    private TextColor quitPlayer;
+
     public ColorsSection(FileConfiguration config, String path) {
         this.config = config;
         this.path = path;
+        parse();
     }
 
-    public String getDeathMain() {
-        return config.getString(path + ".Death.Main", "<red>");
+    private void parse() {
+        deathMain = parseColor("Death.Main", "<red>");
+        deathPlayer = parseColor("Death.Player", "<green>");
+        deathKiller = parseColor("Death.Killer", "<red>");
+        deathWeapon = parseColor("Death.Weapon", "<yellow>");
+        joinMain = parseColor("Join.Main", "<dark_green>");
+        joinPlayer = parseColor("Join.Player", "<green>");
+        quitMain = parseColor("Quit.Main", "<dark_red>");
+        quitPlayer = parseColor("Quit.Player", "<light_purple>");
     }
 
-    public String getDeathPlayer() {
-        return config.getString(path + ".Death.Player", "<green>");
+    private TextColor parseColor(String key, String defaultRaw) {
+        String raw = config.getString(path + "." + key, defaultRaw);
+        return MiniMessage.miniMessage().deserialize(raw + "x").color();
     }
 
-    public String getDeathKiller() {
-        return config.getString(path + ".Death.Killer", "<red>");
+    public TextColor getDeathMain() {
+        return deathMain;
     }
 
-    public String getDeathWeapon() {
-        return config.getString(path + ".Death.Weapon", "<yellow>");
+    public TextColor getDeathPlayer() {
+        return deathPlayer;
     }
 
-    public String getJoinMain() {
-        return config.getString(path + ".Join.Main", "<dark_green>");
+    public TextColor getDeathKiller() {
+        return deathKiller;
     }
 
-    public String getJoinPlayer() {
-        return config.getString(path + ".Join.Player", "<green>");
+    public TextColor getDeathWeapon() {
+        return deathWeapon;
     }
 
-    public String getQuitMain() {
-        return config.getString(path + ".Quit.Main", "<dark_red>");
+    public TextColor getJoinMain() {
+        return joinMain;
     }
 
-    public String getQuitPlayer() {
-        return config.getString(path + ".Quit.Player", "<light_purple>");
+    public TextColor getJoinPlayer() {
+        return joinPlayer;
+    }
+
+    public TextColor getQuitMain() {
+        return quitMain;
+    }
+
+    public TextColor getQuitPlayer() {
+        return quitPlayer;
     }
 }
