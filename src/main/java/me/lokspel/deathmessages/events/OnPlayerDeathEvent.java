@@ -86,9 +86,10 @@ public class OnPlayerDeathEvent implements Listener {
             TextColor weaponColor,
             Player killer
     ) {
-        Component colored = mainColor != null
-                ? message.color(mainColor)
-                : message;
+        Component colored = MessageUtils.stripHoverEvents(message);
+        if (mainColor != null) {
+            colored = colored.color(mainColor);
+        }
 
         if (playerName != null && !playerName.isEmpty()) {
             Component playerComponent = MessageUtils.colorName(playerName, playerColor);

@@ -45,9 +45,10 @@ public class OnPlayerQuitEvent implements Listener {
         if (message != null) {
             TextColor mainColor = config.getColors().getQuitMain();
 
-            Component colored = mainColor != null
-                    ? message.color(mainColor)
-                    : message;
+            Component colored = MessageUtils.stripHoverEvents(message);
+            if (mainColor != null) {
+                colored = colored.color(mainColor);
+            }
 
             Component playerComponent = MessageUtils.colorName(player.getName(), config.getColors().getQuitPlayer());
             colored = colored.replaceText(builder -> builder
