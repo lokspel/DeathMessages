@@ -107,7 +107,7 @@ public class OnPlayerDeathEvent implements Listener {
 
         if (killer != null) {
             ItemStack weapon = killer.getInventory().getItemInMainHand();
-            if (weapon != null && weapon.getType() != Material.AIR) {
+            if (weapon.getType() != Material.AIR) {
                 String weaponName = getWeaponName(weapon);
                 if (weaponName != null) {
                     Component weaponComponent = MessageUtils.colorName(weaponName, weaponColor);
