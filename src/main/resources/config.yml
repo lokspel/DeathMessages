@@ -22,11 +22,13 @@ Settings:
   # Cooldown in seconds between a player's death messages being broadcast
   Death-Message-Cooldown-Seconds: 10
   # Enable or disable death messages globally
-  Death-Messages-Enabled: true
+  Death-Messages: true
   # Enable or disable join messages globally
-  Join-Messages-Enabled: true
+  Join-Messages: true
   # Enable or disable quit messages globally
-  Quit-Messages-Enabled: true
+  Quit-Messages: true
+  # Show an item tooltip when hovering the weapon name in death messages
+  Weapon-Hover: true
 
 Commands:
   DeathMessages:

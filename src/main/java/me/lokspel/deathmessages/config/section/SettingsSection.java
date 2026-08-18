@@ -26,14 +26,18 @@ public class SettingsSection {
     }
 
     public boolean deathMessagesEnabled() {
-        return config().getBoolean(PATH + "Death-Messages-Enabled", true);
+        return config().getBoolean(PATH + "Death-Messages", true);
     }
 
     public boolean joinMessagesEnabled() {
-        return config().getBoolean(PATH + "Join-Messages-Enabled", true);
+        return config().getBoolean(PATH + "Join-Messages", true);
     }
 
     public boolean quitMessagesEnabled() {
-        return config().getBoolean(PATH + "Quit-Messages-Enabled", true);
+        return config().getBoolean(PATH + "Quit-Messages", true);
+    }
+
+    public boolean weaponHoverEnabled() {
+        return config().getBoolean(PATH + "Weapon-Hover", true);
     }
 }

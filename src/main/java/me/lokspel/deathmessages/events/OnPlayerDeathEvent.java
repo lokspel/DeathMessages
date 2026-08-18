@@ -59,7 +59,8 @@ public class OnPlayerDeathEvent implements Listener {
                 killerName,
                 config.colors().deathKiller(),
                 config.colors().deathWeapon(),
-                killer
+                killer,
+                config.settings().weaponHoverEnabled()
         );
 
         for (Player online : player.getServer().getOnlinePlayers()) {
@@ -82,7 +83,8 @@ public class OnPlayerDeathEvent implements Listener {
             String killerName,
             TextColor killerColor,
             TextColor weaponColor,
-            Player killer
+            Player killer,
+            boolean weaponHoverEnabled
     ) {
         Component colored = MessageUtils.applyMainColor(message, mainColor);
         colored = MessageUtils.replaceColoredName(colored, playerName, playerColor);
@@ -91,7 +93,10 @@ public class OnPlayerDeathEvent implements Listener {
         if (killer != null) {
             ItemStack weapon = killer.getInventory().getItemInMainHand();
             if (weapon.getType() != Material.AIR) {
-                colored = MessageUtils.replaceColoredName(colored, ItemUtils.weaponName(weapon), weaponColor);
+                String weaponName = ItemUtils.weaponName(weapon);
+                colored = weaponHoverEnabled
+                        ? MessageUtils.replaceColoredItemName(colored, weaponName, weaponColor, weapon)
+                        : MessageUtils.replaceColoredName(colored, weaponName, weaponColor);
             }
         }
 
