@@ -5,6 +5,7 @@ A Paper plugin that recolorizes death, join, and quit messages with per-player t
 ## Features
 
 - **Custom colors** — Set separate MiniMessage colors for death messages (main text, player, killer, weapon), join messages, and quit messages.
+- **Weapon hover tooltip** — Hover over the weapon name in a death message to see its item tooltip (configurable via `Weapon-Hover`).
 - **Per-player toggle** — Each player can hide/show all death messages (including their own) or hide/show join/quit messages. Toggle controls what *you* see, not what others see of you.
 - **Blacklist** — Blacklist a player so you no longer see their death messages. Others still see them, and the blacklisted player still sees their own death.
 - **Global toggles** — Disable death, join, or quit messages globally via config.
@@ -52,9 +53,10 @@ Colors:
 Settings:
   Min-Playtime-Minutes: 0
   Death-Message-Cooldown-Seconds: 10
-  Death-Messages-Enabled: true
-  Join-Messages-Enabled: true
-  Quit-Messages-Enabled: true
+  Death-Messages: true
+  Join-Messages: true
+  Quit-Messages: true
+  Weapon-Hover: true
 
 Commands:
   DeathMessages:
