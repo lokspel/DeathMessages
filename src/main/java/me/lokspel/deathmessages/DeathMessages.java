@@ -11,6 +11,7 @@ import me.lokspel.deathmessages.config.UserDataManager;
 import me.lokspel.deathmessages.events.OnPlayerDeathEvent;
 import me.lokspel.deathmessages.events.OnPlayerJoinEvent;
 import me.lokspel.deathmessages.events.OnPlayerQuitEvent;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -25,6 +26,8 @@ public class DeathMessages extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        new Metrics(this, 33462);
 
         config = new MainConfig(this);
 
