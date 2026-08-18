@@ -1,12 +1,11 @@
 package me.lokspel.deathmessages.events;
 
 import me.lokspel.deathmessages.DeathMessages;
-import me.lokspel.deathmessages.config.ConfigManager;
+import me.lokspel.deathmessages.config.MainConfig;
 import me.lokspel.deathmessages.config.UserDataManager;
 import me.lokspel.deathmessages.utils.MessageUtils;
 import me.lokspel.deathmessages.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,11 +15,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class OnPlayerQuitEvent implements Listener {
 
-    private final ConfigManager config;
+    private final MainConfig config;
     private final UserDataManager userData;
 
     public OnPlayerQuitEvent() {
-        this.config = DeathMessages.getInstance().getConfigManager();
+        this.config = DeathMessages.getInstance().getMainConfig();
         this.userData = DeathMessages.getInstance().getUserDataManager();
     }
 
@@ -29,31 +28,19 @@ public class OnPlayerQuitEvent implements Listener {
         Player player = event.getPlayer();
         PlayerUtils.removeDeathTime(player);
 
-        if (!config.getSettings().isQuitMessagesEnabled()) {
+        if (!config.settings().quitMessagesEnabled()) {
             return;
         }
 
-        long playTime = PlayerUtils.getPlayTime(player);
-        int minPlayTimeMinutes = config.getSettings().getMinPlayTimeMinutes();
-
-        if (playTime < minPlayTimeMinutes) {
+        if (PlayerUtils.hasNotPlayedLongEnough(player, config.settings().minPlayTimeMinutes())) {
             event.quitMessage(null);
             return;
         }
 
         Component message = event.quitMessage();
         if (message != null) {
-            TextColor mainColor = config.getColors().getQuitMain();
-
-            Component colored = MessageUtils.stripHoverEvents(message);
-            if (mainColor != null) {
-                colored = colored.color(mainColor);
-            }
-
-            Component playerComponent = MessageUtils.colorName(player.getName(), config.getColors().getQuitPlayer());
-            colored = colored.replaceText(builder -> builder
-                    .matchLiteral(player.getName())
-                    .replacement(playerComponent));
+            Component colored = MessageUtils.applyMainColor(message, config.colors().quitMain());
+            colored = MessageUtils.replaceColoredName(colored, player.getName(), config.colors().quitPlayer());
 
             for (Player online : player.getServer().getOnlinePlayers()) {
                 if (userData.isConnectionMessagesEnabled(online.getUniqueId())) {

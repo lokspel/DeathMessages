@@ -1,7 +1,7 @@
 package me.lokspel.deathmessages.commands;
 
 import me.lokspel.deathmessages.DeathMessages;
-import me.lokspel.deathmessages.config.ConfigManager;
+import me.lokspel.deathmessages.config.MainConfig;
 import me.lokspel.deathmessages.config.UserDataManager;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.Command;
@@ -12,12 +12,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class ToggleConnectionMsgCommand implements CommandExecutor {
 
-    private final ConfigManager config;
+    private final MainConfig config;
     private final UserDataManager userData;
     private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
 
     public ToggleConnectionMsgCommand(DeathMessages plugin) {
-        this.config = plugin.getConfigManager();
+        this.config = plugin.getMainConfig();
         this.userData = plugin.getUserDataManager();
     }
 
@@ -25,7 +25,7 @@ public class ToggleConnectionMsgCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!sender.hasPermission("deathmessages.command.toggleconnectionmsg")) {
             sender.sendMessage(legacySerializer.deserialize(
-                    config.getMessages().getNoPermission().replace("%prefix%", config.getMessages().getPrefix())));
+                    config.messages().noPermission().replace("%prefix%", config.messages().prefix())));
             return true;
         }
 

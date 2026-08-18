@@ -1,12 +1,12 @@
 package me.lokspel.deathmessages;
 
-import me.lokspel.deathmessages.commands.CommandBlacklist;
+import me.lokspel.deathmessages.commands.BlacklistCommand;
 import me.lokspel.deathmessages.commands.CommandDispatcher;
 import me.lokspel.deathmessages.commands.CommandDispatcher.RegisteredCommand;
-import me.lokspel.deathmessages.commands.CommandReload;
-import me.lokspel.deathmessages.commands.CommandToggle;
+import me.lokspel.deathmessages.commands.ReloadCommand;
+import me.lokspel.deathmessages.commands.ToggleCommand;
 import me.lokspel.deathmessages.commands.ToggleConnectionMsgCommand;
-import me.lokspel.deathmessages.config.ConfigManager;
+import me.lokspel.deathmessages.config.MainConfig;
 import me.lokspel.deathmessages.config.UserDataManager;
 import me.lokspel.deathmessages.events.OnPlayerDeathEvent;
 import me.lokspel.deathmessages.events.OnPlayerJoinEvent;
@@ -19,26 +19,24 @@ import java.util.Objects;
 public class DeathMessages extends JavaPlugin {
 
     private static DeathMessages instance;
-    private ConfigManager configManager;
+    private MainConfig config;
     private UserDataManager userDataManager;
 
     @Override
     public void onEnable() {
         instance = this;
-        getLogger().info("Plugin is loading...");
 
-        configManager = new ConfigManager(this);
-        configManager.loadConfig();
+        config = new MainConfig(this);
 
         userDataManager = new UserDataManager(this);
         userDataManager.loadUserData();
 
-        var toggleCommand = new CommandToggle(this);
+        var toggleCommand = new ToggleCommand(this);
 
-        CommandDispatcher dispatcher = new CommandDispatcher(configManager, List.of(
-                new RegisteredCommand("reload", new CommandReload(this)),
+        CommandDispatcher dispatcher = new CommandDispatcher(config, List.of(
+                new RegisteredCommand("reload", new ReloadCommand(this)),
                 new RegisteredCommand("toggle", toggleCommand),
-                new RegisteredCommand("blacklist", new CommandBlacklist(this))
+                new RegisteredCommand("blacklist", new BlacklistCommand(this))
         ));
         var deathMessagesCmd = Objects.requireNonNull(getCommand("deathmessages"));
         deathMessagesCmd.setExecutor(dispatcher);
@@ -51,8 +49,6 @@ public class DeathMessages extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OnPlayerDeathEvent(), this);
         getServer().getPluginManager().registerEvents(new OnPlayerJoinEvent(), this);
         getServer().getPluginManager().registerEvents(new OnPlayerQuitEvent(), this);
-
-        getLogger().info("Plugin loaded successfully!");
     }
 
     @Override
@@ -60,15 +56,14 @@ public class DeathMessages extends JavaPlugin {
         if (userDataManager != null) {
             userDataManager.saveUserData();
         }
-        getLogger().info("Plugin disabled!");
     }
 
     public static DeathMessages getInstance() {
         return instance;
     }
 
-    public ConfigManager getConfigManager() {
-        return configManager;
+    public MainConfig getMainConfig() {
+        return config;
     }
 
     public UserDataManager getUserDataManager() {

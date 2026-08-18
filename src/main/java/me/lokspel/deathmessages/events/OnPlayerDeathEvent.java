@@ -1,12 +1,12 @@
 package me.lokspel.deathmessages.events;
 
 import me.lokspel.deathmessages.DeathMessages;
-import me.lokspel.deathmessages.config.ConfigManager;
+import me.lokspel.deathmessages.config.MainConfig;
 import me.lokspel.deathmessages.config.UserDataManager;
+import me.lokspel.deathmessages.utils.ItemUtils;
 import me.lokspel.deathmessages.utils.MessageUtils;
 import me.lokspel.deathmessages.utils.PlayerUtils;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,33 +16,31 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class OnPlayerDeathEvent implements Listener {
 
-    private final ConfigManager config;
+    private final MainConfig config;
     private final UserDataManager userData;
 
     public OnPlayerDeathEvent() {
-        this.config = DeathMessages.getInstance().getConfigManager();
+        this.config = DeathMessages.getInstance().getMainConfig();
         this.userData = DeathMessages.getInstance().getUserDataManager();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void handle(PlayerDeathEvent event) {
-        if (!config.getSettings().isDeathMessagesEnabled()) {
+        if (!config.settings().deathMessagesEnabled()) {
             return;
         }
 
         Player player = event.getEntity();
-        long playTime = PlayerUtils.getPlayTime(player);
 
-        if (playTime < config.getSettings().getMinPlayTimeMinutes()) {
+        if (PlayerUtils.hasNotPlayedLongEnough(player, config.settings().minPlayTimeMinutes())) {
             return;
         }
 
         Player killer = player.getKiller();
-        int cooldownSeconds = config.getSettings().getDeathMessageCooldownSeconds();
+        int cooldownSeconds = config.settings().deathMessageCooldownSeconds();
         Component deathMessage = event.deathMessage();
 
         if (deathMessage == null || PlayerUtils.isCooldownActive(player, cooldownSeconds)) {
@@ -55,12 +53,12 @@ public class OnPlayerDeathEvent implements Listener {
 
         Component colored = colorDeathMessage(
                 deathMessage,
-                config.getColors().getDeathMain(),
+                config.colors().deathMain(),
                 playerName,
-                config.getColors().getDeathPlayer(),
+                config.colors().deathPlayer(),
                 killerName,
-                config.getColors().getDeathKiller(),
-                config.getColors().getDeathWeapon(),
+                config.colors().deathKiller(),
+                config.colors().deathWeapon(),
                 killer
         );
 
@@ -86,56 +84,17 @@ public class OnPlayerDeathEvent implements Listener {
             TextColor weaponColor,
             Player killer
     ) {
-        Component colored = MessageUtils.stripHoverEvents(message);
-        if (mainColor != null) {
-            colored = colored.color(mainColor);
-        }
-
-        if (playerName != null && !playerName.isEmpty()) {
-            Component playerComponent = MessageUtils.colorName(playerName, playerColor);
-            colored = colored.replaceText(builder -> builder
-                    .matchLiteral(playerName)
-                    .replacement(playerComponent));
-        }
-
-        if (killerName != null && !killerName.isEmpty()) {
-            Component killerComponent = MessageUtils.colorName(killerName, killerColor);
-            colored = colored.replaceText(builder -> builder
-                    .matchLiteral(killerName)
-                    .replacement(killerComponent));
-        }
+        Component colored = MessageUtils.applyMainColor(message, mainColor);
+        colored = MessageUtils.replaceColoredName(colored, playerName, playerColor);
+        colored = MessageUtils.replaceColoredName(colored, killerName, killerColor);
 
         if (killer != null) {
             ItemStack weapon = killer.getInventory().getItemInMainHand();
             if (weapon.getType() != Material.AIR) {
-                String weaponName = getWeaponName(weapon);
-                if (weaponName != null) {
-                    Component weaponComponent = MessageUtils.colorName(weaponName, weaponColor);
-                    colored = colored.replaceText(builder -> builder
-                            .matchLiteral(weaponName)
-                            .replacement(weaponComponent));
-                }
+                colored = MessageUtils.replaceColoredName(colored, ItemUtils.weaponName(weapon), weaponColor);
             }
         }
 
         return colored;
-    }
-
-    private String getWeaponName(ItemStack weapon) {
-        ItemMeta itemMeta = weapon.getItemMeta();
-        if (itemMeta != null && itemMeta.hasDisplayName()) {
-            Component displayName = itemMeta.displayName();
-            if (displayName instanceof TextComponent) {
-                return ((TextComponent) displayName).content();
-            }
-        }
-        String[] words = weapon.getType().name().toLowerCase().split("_");
-        StringBuilder sb = new StringBuilder();
-        for (String word : words) {
-            sb.append(Character.toUpperCase(word.charAt(0)))
-              .append(word.substring(1))
-              .append(" ");
-        }
-        return sb.toString().trim();
     }
 }

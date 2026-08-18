@@ -1,6 +1,6 @@
 package me.lokspel.deathmessages.commands;
 
-import me.lokspel.deathmessages.config.ConfigManager;
+import me.lokspel.deathmessages.config.MainConfig;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 public class CommandDispatcher implements CommandExecutor, TabCompleter {
 
     private final Map<String, SubCommand> subCommands = new LinkedHashMap<>();
-    private final ConfigManager config;
+    private final MainConfig config;
     private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
 
-    public CommandDispatcher(ConfigManager config, List<RegisteredCommand> commands) {
+    public CommandDispatcher(MainConfig config, List<RegisteredCommand> commands) {
         this.config = config;
         for (RegisteredCommand cmd : commands) {
             subCommands.put(cmd.name(), cmd.executor());
@@ -43,9 +43,9 @@ public class CommandDispatcher implements CommandExecutor, TabCompleter {
     }
 
     private void sendHelp(CommandSender sender) {
-        for (String line : config.getMessages().getHelp()) {
+        for (String line : config.messages().help()) {
             sender.sendMessage(legacySerializer.deserialize(
-                    line.replace("%prefix%", config.getMessages().getPrefix())));
+                    line.replace("%prefix%", config.messages().prefix())));
         }
     }
 

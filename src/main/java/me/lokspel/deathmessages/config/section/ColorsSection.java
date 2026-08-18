@@ -1,74 +1,59 @@
 package me.lokspel.deathmessages.config.section;
 
+import me.lokspel.deathmessages.DeathMessages;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class ColorsSection {
 
-    private final FileConfiguration config;
-    private final String path;
+    private static final String PATH = "Colors.";
 
-    private TextColor deathMain;
-    private TextColor deathPlayer;
-    private TextColor deathKiller;
-    private TextColor deathWeapon;
-    private TextColor joinMain;
-    private TextColor joinPlayer;
-    private TextColor quitMain;
-    private TextColor quitPlayer;
+    private final DeathMessages plugin;
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
 
-    public ColorsSection(FileConfiguration config, String path) {
-        this.config = config;
-        this.path = path;
-        parse();
+    public ColorsSection(DeathMessages plugin) {
+        this.plugin = plugin;
     }
 
-    private void parse() {
-        deathMain = parseColor("Death.Main", "<red>");
-        deathPlayer = parseColor("Death.Player", "<green>");
-        deathKiller = parseColor("Death.Killer", "<red>");
-        deathWeapon = parseColor("Death.Weapon", "<yellow>");
-        joinMain = parseColor("Join.Main", "<dark_green>");
-        joinPlayer = parseColor("Join.Player", "<green>");
-        quitMain = parseColor("Quit.Main", "<dark_red>");
-        quitPlayer = parseColor("Quit.Player", "<light_purple>");
+    private FileConfiguration config() {
+        return plugin.getConfig();
     }
 
-    private TextColor parseColor(String key, String defaultRaw) {
-        String raw = config.getString(path + "." + key, defaultRaw);
-        return MiniMessage.miniMessage().deserialize(raw + "x").color();
+    private TextColor color(String key, String defaultRaw) {
+        String raw = config().getString(PATH + key, defaultRaw);
+        return miniMessage.deserialize(raw + "x").color();
     }
 
-    public TextColor getDeathMain() {
-        return deathMain;
+    public TextColor deathMain() {
+        return color("Death.Main", "<red>");
     }
 
-    public TextColor getDeathPlayer() {
-        return deathPlayer;
+    public TextColor deathPlayer() {
+        return color("Death.Player", "<green>");
     }
 
-    public TextColor getDeathKiller() {
-        return deathKiller;
+    public TextColor deathKiller() {
+        return color("Death.Killer", "<red>");
     }
 
-    public TextColor getDeathWeapon() {
-        return deathWeapon;
+    public TextColor deathWeapon() {
+        return color("Death.Weapon", "<yellow>");
     }
 
-    public TextColor getJoinMain() {
-        return joinMain;
+    public TextColor joinMain() {
+        return color("Join.Main", "<dark_green>");
     }
 
-    public TextColor getJoinPlayer() {
-        return joinPlayer;
+    public TextColor joinPlayer() {
+        return color("Join.Player", "<green>");
     }
 
-    public TextColor getQuitMain() {
-        return quitMain;
+    public TextColor quitMain() {
+        return color("Quit.Main", "<dark_red>");
     }
 
-    public TextColor getQuitPlayer() {
-        return quitPlayer;
+    public TextColor quitPlayer() {
+        return color("Quit.Player", "<light_purple>");
     }
 }

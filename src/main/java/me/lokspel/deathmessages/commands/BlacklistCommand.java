@@ -1,7 +1,7 @@
 package me.lokspel.deathmessages.commands;
 
 import me.lokspel.deathmessages.DeathMessages;
-import me.lokspel.deathmessages.config.ConfigManager;
+import me.lokspel.deathmessages.config.MainConfig;
 import me.lokspel.deathmessages.config.UserDataManager;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -16,36 +16,35 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class CommandBlacklist implements SubCommand, TabCompleter {
+public class BlacklistCommand implements SubCommand, TabCompleter {
 
-    private final ConfigManager config;
+    private final MainConfig config;
     private final UserDataManager userData;
     private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
 
-    public CommandBlacklist(DeathMessages plugin) {
-        this.config = plugin.getConfigManager();
+    public BlacklistCommand(DeathMessages plugin) {
+        this.config = plugin.getMainConfig();
         this.userData = plugin.getUserDataManager();
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(legacySerializer.deserialize(config.getMessages().getPlayerOnly()));
+        if (!(sender instanceof Player viewer)) {
+            sender.sendMessage(legacySerializer.deserialize(config.messages().playerOnly()));
             return true;
         }
 
         if (!sender.hasPermission("deathmessages.command.blacklist")) {
             sender.sendMessage(legacySerializer.deserialize(
-                    config.getMessages().getNoPermission().replace("%prefix%", config.getMessages().getPrefix())));
+                    config.messages().noPermission().replace("%prefix%", config.messages().prefix())));
             return true;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(legacySerializer.deserialize(config.getMessages().getBlacklistHelp()));
+            sender.sendMessage(legacySerializer.deserialize(config.messages().blacklistHelp()));
             return true;
         }
 
-        Player viewer = (Player) sender;
         String username = args[1];
         UUID targetUUID = null;
 
@@ -55,7 +54,7 @@ public class CommandBlacklist implements SubCommand, TabCompleter {
         }
 
         if (targetUUID == null) {
-            targetUUID = userData.getUUIDByUsername(username);
+            targetUUID = userData.uuidByUsername(username);
         }
 
         if (targetUUID == null) {
@@ -67,8 +66,8 @@ public class CommandBlacklist implements SubCommand, TabCompleter {
 
         if (targetUUID == null) {
             sender.sendMessage(legacySerializer.deserialize(
-                    config.getMessages().getBlacklistUsernameNonexistent()
-                            .replace("%prefix%", config.getMessages().getPrefix())
+                    config.messages().blacklistUsernameNonexistent()
+                            .replace("%prefix%", config.messages().prefix())
                             .replace("%player%", username)));
             return true;
         }
@@ -77,10 +76,10 @@ public class CommandBlacklist implements SubCommand, TabCompleter {
 
         if (nowBlacklisted) {
             sender.sendMessage(legacySerializer.deserialize(
-                    config.getMessages().getBlacklistAdd().replace("%player%", username)));
+                    config.messages().blacklistAdd().replace("%player%", username)));
         } else {
             sender.sendMessage(legacySerializer.deserialize(
-                    config.getMessages().getBlacklistRemove().replace("%player%", username)));
+                    config.messages().blacklistRemove().replace("%player%", username)));
         }
         return true;
     }

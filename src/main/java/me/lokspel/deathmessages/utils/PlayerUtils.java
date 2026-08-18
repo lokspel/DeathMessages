@@ -14,6 +14,10 @@ public class PlayerUtils {
         return player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 1200;
     }
 
+    public static boolean hasNotPlayedLongEnough(Player player, int minPlayTimeMinutes) {
+        return getPlayTime(player) < minPlayTimeMinutes;
+    }
+
     public static long getCurrentTimeSeconds() {
         return System.currentTimeMillis() / 1000;
     }

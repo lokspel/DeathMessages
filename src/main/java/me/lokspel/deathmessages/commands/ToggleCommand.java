@@ -1,20 +1,20 @@
 package me.lokspel.deathmessages.commands;
 
 import me.lokspel.deathmessages.DeathMessages;
-import me.lokspel.deathmessages.config.ConfigManager;
+import me.lokspel.deathmessages.config.MainConfig;
 import me.lokspel.deathmessages.config.UserDataManager;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandToggle implements SubCommand {
+public class ToggleCommand implements SubCommand {
 
-    private final ConfigManager config;
+    private final MainConfig config;
     private final UserDataManager userData;
     private final LegacyComponentSerializer legacySerializer = LegacyComponentSerializer.legacyAmpersand();
 
-    public CommandToggle(DeathMessages plugin) {
-        this.config = plugin.getConfigManager();
+    public ToggleCommand(DeathMessages plugin) {
+        this.config = plugin.getMainConfig();
         this.userData = plugin.getUserDataManager();
     }
 
@@ -22,12 +22,12 @@ public class CommandToggle implements SubCommand {
     public boolean execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission("deathmessages.command.toggle")) {
             sender.sendMessage(legacySerializer.deserialize(
-                    config.getMessages().getNoPermission().replace("%prefix%", config.getMessages().getPrefix())));
+                    config.messages().noPermission().replace("%prefix%", config.messages().prefix())));
             return true;
         }
 
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(legacySerializer.deserialize(config.getMessages().getPlayerOnly()));
+            sender.sendMessage(legacySerializer.deserialize(config.messages().playerOnly()));
             return true;
         }
 
@@ -35,9 +35,9 @@ public class CommandToggle implements SubCommand {
         userData.setMessagesEnabled(player.getUniqueId(), !current);
 
         if (current) {
-            player.sendMessage(legacySerializer.deserialize(config.getMessages().getToggleOff()));
+            player.sendMessage(legacySerializer.deserialize(config.messages().toggleOff()));
         } else {
-            player.sendMessage(legacySerializer.deserialize(config.getMessages().getToggleOn()));
+            player.sendMessage(legacySerializer.deserialize(config.messages().toggleOn()));
         }
         return true;
     }

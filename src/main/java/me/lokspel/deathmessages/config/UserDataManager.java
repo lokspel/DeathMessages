@@ -44,49 +44,49 @@ public class UserDataManager {
     }
 
     public boolean isMessagesEnabled(UUID uuid) {
-        return userData.getBoolean(uuid + ".messages-enabled", true);
+        return userData.getBoolean(uuid + ".messages", true);
     }
 
     public void setMessagesEnabled(UUID uuid, boolean enabled) {
-        userData.set(uuid + ".messages-enabled", enabled);
+        userData.set(uuid + ".messages", enabled);
         saveUserData();
     }
 
     public boolean isConnectionMessagesEnabled(UUID uuid) {
-        return userData.getBoolean(uuid + ".connection-messages-enabled", true);
+        return userData.getBoolean(uuid + ".connection-messages", true);
     }
 
     public void setConnectionMessagesEnabled(UUID uuid, boolean enabled) {
-        userData.set(uuid + ".connection-messages-enabled", enabled);
+        userData.set(uuid + ".connection-messages", enabled);
         saveUserData();
     }
 
-    public List<String> getBlacklist(UUID viewerUUID) {
+    public List<String> blacklist(UUID viewerUUID) {
         return userData.getStringList(viewerUUID + ".blacklist");
     }
 
     public boolean isBlacklistedFor(UUID viewerUUID, UUID targetUUID) {
-        return getBlacklist(viewerUUID).contains(targetUUID.toString());
+        return blacklist(viewerUUID).contains(targetUUID.toString());
     }
 
     public boolean toggleBlacklist(UUID viewerUUID, UUID targetUUID, String targetUsername) {
-        List<String> blacklist = getBlacklist(viewerUUID);
+        List<String> entries = blacklist(viewerUUID);
         String targetStr = targetUUID.toString();
-        boolean currentlyBlacklisted = blacklist.contains(targetStr);
+        boolean currentlyBlacklisted = entries.contains(targetStr);
 
         if (currentlyBlacklisted) {
-            blacklist.remove(targetStr);
+            entries.remove(targetStr);
         } else {
-            blacklist.add(targetStr);
+            entries.add(targetStr);
         }
 
-        userData.set(viewerUUID + ".blacklist", blacklist);
+        userData.set(viewerUUID + ".blacklist", entries);
         userData.set(targetUUID + ".username", targetUsername);
         saveUserData();
         return !currentlyBlacklisted;
     }
 
-    public UUID getUUIDByUsername(String username) {
+    public UUID uuidByUsername(String username) {
         for (String key : userData.getKeys(false)) {
             String storedUsername = userData.getString(key + ".username");
             if (storedUsername != null && storedUsername.equalsIgnoreCase(username)) {

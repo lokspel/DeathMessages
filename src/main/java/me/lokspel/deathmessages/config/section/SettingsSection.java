@@ -1,34 +1,39 @@
 package me.lokspel.deathmessages.config.section;
 
+import me.lokspel.deathmessages.DeathMessages;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class SettingsSection {
 
-    private final FileConfiguration config;
-    private final String path;
+    private static final String PATH = "Settings.";
 
-    public SettingsSection(FileConfiguration config, String path) {
-        this.config = config;
-        this.path = path;
+    private final DeathMessages plugin;
+
+    public SettingsSection(DeathMessages plugin) {
+        this.plugin = plugin;
     }
 
-    public int getMinPlayTimeMinutes() {
-        return config.getInt(path + ".Min-Playtime-Minutes", 0);
+    private FileConfiguration config() {
+        return plugin.getConfig();
     }
 
-    public int getDeathMessageCooldownSeconds() {
-        return config.getInt(path + ".Death-Message-Cooldown-Seconds", 3);
+    public int minPlayTimeMinutes() {
+        return config().getInt(PATH + "Min-Playtime-Minutes", 0);
     }
 
-    public boolean isDeathMessagesEnabled() {
-        return config.getBoolean(path + ".Death-Messages-Enabled", true);
+    public int deathMessageCooldownSeconds() {
+        return config().getInt(PATH + "Death-Message-Cooldown-Seconds", 3);
     }
 
-    public boolean isJoinMessagesEnabled() {
-        return config.getBoolean(path + ".Join-Messages-Enabled", true);
+    public boolean deathMessagesEnabled() {
+        return config().getBoolean(PATH + "Death-Messages-Enabled", true);
     }
 
-    public boolean isQuitMessagesEnabled() {
-        return config.getBoolean(path + ".Quit-Messages-Enabled", true);
+    public boolean joinMessagesEnabled() {
+        return config().getBoolean(PATH + "Join-Messages-Enabled", true);
+    }
+
+    public boolean quitMessagesEnabled() {
+        return config().getBoolean(PATH + "Quit-Messages-Enabled", true);
     }
 }
