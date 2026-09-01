@@ -22,7 +22,7 @@ public class ToggleConnectionMsgCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
         if (!sender.hasPermission("deathmessages.command.toggleconnectionmsg")) {
             sender.sendMessage(legacySerializer.deserialize(
                     config.messages().noPermission().replace("%prefix%", config.messages().prefix())));
